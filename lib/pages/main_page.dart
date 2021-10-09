@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 
@@ -9,15 +10,19 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
+
 class _MainPageState extends State<MainPage> {
   final MainBloc bloc = MainBloc();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: SuperheroesColors.background,
-      body: SafeArea(
-        child: MainPageContent(),
+    return Provider.value(
+      value: bloc,
+      child: Scaffold(
+        backgroundColor: SuperheroesColors.background,
+        body: SafeArea(
+          child: MainPageContent(),
+        ),
       ),
     );
   }
@@ -30,11 +35,9 @@ class _MainPageState extends State<MainPage> {
 }
 
 class MainPageContent extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    final _MainPageState state = context.findAncestorStateOfType<_MainPageState>()!;
-    final MainBloc bloc = state.bloc;
+    final MainBloc bloc = Provider.of<MainBloc>(context);
     return Stack(
       children: [
         MainPageStateWidget(),
@@ -54,11 +57,9 @@ class MainPageContent extends StatelessWidget {
 }
 
 class MainPageStateWidget extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    final _MainPageState state = context.findAncestorStateOfType<_MainPageState>()!;
-    final MainBloc bloc = state.bloc;
+    final MainBloc bloc = MainBlocHolder.of(context).bloc;
     return StreamBuilder<MainPageState>(
       stream: bloc.observeMainPageState(),
       builder: (context, snapshot) {

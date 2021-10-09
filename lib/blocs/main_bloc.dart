@@ -23,7 +23,7 @@ class MainBloc {
     stateSubject.close();
   }
 }
-
+//
 enum MainPageState {
   noFavorites,
   minSymbols,

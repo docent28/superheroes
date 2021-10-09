@@ -59,7 +59,7 @@ class MainPageContent extends StatelessWidget {
 class MainPageStateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final MainBloc bloc = MainBlocHolder.of(context).bloc;
+    final MainBloc bloc = Provider.of<MainBloc>(context);
     return StreamBuilder<MainPageState>(
       stream: bloc.observeMainPageState(),
       builder: (context, snapshot) {

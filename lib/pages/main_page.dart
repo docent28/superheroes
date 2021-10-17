@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
+import 'package:superheroes/widgets/action_button.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key? key}) : super(key: key);
@@ -9,7 +10,6 @@ class MainPage extends StatefulWidget {
   @override
   State<MainPage> createState() => _MainPageState();
 }
-
 
 class _MainPageState extends State<MainPage> {
   final MainBloc bloc = MainBloc();
@@ -43,14 +43,11 @@ class MainPageContent extends StatelessWidget {
         MainPageStateWidget(),
         Align(
           alignment: Alignment.bottomCenter,
-          child: GestureDetector(
+          child: ActionButton(
             onTap: () => bloc.nextState(),
-            child: Text(
-              "Next state".toUpperCase(),
-              style: TextStyle(fontSize: 20, color: Colors.white),
-            ),
+            text: "Next state",
           ),
-        )
+        ),
       ],
     );
   }

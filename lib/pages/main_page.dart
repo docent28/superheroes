@@ -79,9 +79,10 @@ class MainPageStateWidget extends StatelessWidget {
             return const NoFavoritesWidget();
           case MainPageState.favorites:
             return const FavoritesWidget();
+          case MainPageState.searchResults:
+            return const SearchResultsWidget();
           case MainPageState.nothingFound:
           case MainPageState.loadingError:
-          case MainPageState.searchResults:
           default:
             return Center(
               child: Text(
@@ -133,6 +134,51 @@ class FavoritesWidget extends StatelessWidget {
             realName: "Tony Stark",
             imageUrl:
                 "https://www.superherodb.com/pictures2/portraits/10/100/85.jpg",
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SearchResultsWidget extends StatelessWidget {
+  const SearchResultsWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        SizedBox(height: 90),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            "Search results",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 24,
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SuperheroCard(
+            name: "Batman",
+            realName: "Bruce Wayne",
+            imageUrl:
+            "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
+          ),
+        ),
+        SizedBox(height: 8),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SuperheroCard(
+            name: "Venom",
+            realName: "Eddie Brock",
+            imageUrl:
+            "https://www.superherodb.com/pictures2/portraits/10/100/22.jpg",
           ),
         ),
       ],

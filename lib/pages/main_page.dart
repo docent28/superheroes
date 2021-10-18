@@ -4,6 +4,7 @@ import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
+import 'package:superheroes/widgets/superhero_card.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key? key}) : super(key: key);
@@ -72,10 +73,11 @@ class MainPageStateWidget extends StatelessWidget {
             return MinSymbolsWidget();
           case MainPageState.noFavorites:
             return NoFavoritesWidget();
+          case MainPageState.favorites:
+            return FavoritesWidget();
           case MainPageState.nothingFound:
           case MainPageState.loadingError:
           case MainPageState.searchResults:
-          case MainPageState.favorites:
           default:
             return Center(
               child: Text(
@@ -85,6 +87,51 @@ class MainPageStateWidget extends StatelessWidget {
             );
         }
       },
+    );
+  }
+}
+
+class FavoritesWidget extends StatelessWidget {
+  const FavoritesWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        SizedBox(height: 90),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            "Your favorites",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 24,
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SuperheroCard(
+            name: "Batman",
+            realName: "Bruce Wayne",
+            imageUrl:
+                "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
+          ),
+        ),
+        SizedBox(height: 8),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SuperheroCard(
+            name: "Ironman",
+            realName: "Tony Stark",
+            imageUrl:
+                "https://www.superherodb.com/pictures2/portraits/10/100/85.jpg",
+          ),
+        ),
+      ],
     );
   }
 }
@@ -103,7 +150,7 @@ class NoFavoritesWidget extends StatelessWidget {
               Container(
                 height: 108,
                 width: 108,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: SuperheroesColors.blue,
                 ),
@@ -119,7 +166,7 @@ class NoFavoritesWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Text(
+          const Text(
             "No favorites yet",
             style: TextStyle(
               color: Colors.white,
@@ -130,7 +177,7 @@ class NoFavoritesWidget extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             "Search and add".toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w700,
               fontSize: 16,
@@ -149,7 +196,7 @@ class MinSymbolsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return const Align(
       alignment: Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.only(top: 110),
@@ -173,7 +220,7 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return const Align(
       alignment: Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.only(top: 110),

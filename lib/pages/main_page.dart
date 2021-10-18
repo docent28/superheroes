@@ -7,7 +7,7 @@ import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -20,7 +20,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Provider.value(
       value: bloc,
-      child: Scaffold(
+      child: const Scaffold(
         backgroundColor: SuperheroesColors.background,
         body: SafeArea(
           child: MainPageContent(),
@@ -37,6 +37,8 @@ class _MainPageState extends State<MainPage> {
 }
 
 class MainPageContent extends StatelessWidget {
+  const MainPageContent({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context);
@@ -68,13 +70,13 @@ class MainPageStateWidget extends StatelessWidget {
         final MainPageState state = snapshot.data!;
         switch (state) {
           case MainPageState.loading:
-            return LoadingIndicator();
+            return const LoadingIndicator();
           case MainPageState.minSymbols:
-            return MinSymbolsWidget();
+            return const MinSymbolsWidget();
           case MainPageState.noFavorites:
-            return NoFavoritesWidget();
+            return const NoFavoritesWidget();
           case MainPageState.favorites:
-            return FavoritesWidget();
+            return const FavoritesWidget();
           case MainPageState.nothingFound:
           case MainPageState.loadingError:
           case MainPageState.searchResults:
@@ -82,7 +84,7 @@ class MainPageStateWidget extends StatelessWidget {
             return Center(
               child: Text(
                 state.toString(),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
             );
         }

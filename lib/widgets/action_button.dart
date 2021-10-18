@@ -16,14 +16,14 @@ class ActionButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: SuperheroesColors.blue,
         ),
         child: Text(
           text.toUpperCase(),
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w700,
             color: Colors.white,
             fontSize: 14,

@@ -44,7 +44,7 @@ class MainPageContent extends StatelessWidget {
     final MainBloc bloc = Provider.of<MainBloc>(context);
     return Stack(
       children: [
-        MainPageStateWidget(),
+        const MainPageStateWidget(),
         Align(
           alignment: Alignment.bottomCenter,
           child: ActionButton(
@@ -58,6 +58,8 @@ class MainPageContent extends StatelessWidget {
 }
 
 class MainPageStateWidget extends StatelessWidget {
+  const MainPageStateWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context);

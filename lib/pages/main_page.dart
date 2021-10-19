@@ -5,6 +5,7 @@ import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
+import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
 class MainPage extends StatefulWidget {
@@ -77,13 +78,15 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.minSymbols:
             return const MinSymbolsWidget();
           case MainPageState.noFavorites:
-            return const NoFavoritesWidget();
+            return NoFavoritesWidget();
           case MainPageState.favorites:
             return const FavoritesWidget();
           case MainPageState.searchResults:
             return const SearchResultsWidget();
           case MainPageState.nothingFound:
+            return NothingFoundWidget();
           case MainPageState.loadingError:
+            return LoadingErrorWidget();
           default:
             return Center(
               child: Text(
@@ -105,8 +108,8 @@ class FavoritesWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 90),
-        Padding(
+        const SizedBox(height: 90),
+        const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             "Your favorites",
@@ -117,9 +120,9 @@ class FavoritesWidget extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SuperheroCard(
             name: "Batman",
             realName: "Bruce Wayne",
@@ -128,15 +131,15 @@ class FavoritesWidget extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => SuperheroPage(name: "Batman"),
+                  builder: (context) => const SuperheroPage(name: "Batman"),
                 ),
               );
             },
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SuperheroCard(
             name: "Ironman",
             realName: "Tony Stark",
@@ -145,7 +148,7 @@ class FavoritesWidget extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => SuperheroPage(name: "Ironman"),
+                  builder: (context) => const SuperheroPage(name: "Ironman"),
                 ),
               );
             },
@@ -164,8 +167,8 @@ class SearchResultsWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 90),
-        Padding(
+        const SizedBox(height: 90),
+        const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             "Search results",
@@ -176,35 +179,35 @@ class SearchResultsWidget extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SuperheroCard(
             name: "Batman",
             realName: "Bruce Wayne",
             imageUrl:
-            "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
+                "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => SuperheroPage(name: "Batman"),
+                  builder: (context) => const SuperheroPage(name: "Batman"),
                 ),
               );
             },
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SuperheroCard(
             name: "Venom",
             realName: "Eddie Brock",
             imageUrl:
-            "https://www.superherodb.com/pictures2/portraits/10/100/22.jpg",
+                "https://www.superherodb.com/pictures2/portraits/10/100/22.jpg",
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => SuperheroPage(name: "Venom"),
+                  builder: (context) => const SuperheroPage(name: "Venom"),
                 ),
               );
             },
@@ -216,55 +219,50 @@ class SearchResultsWidget extends StatelessWidget {
 }
 
 class NoFavoritesWidget extends StatelessWidget {
-  const NoFavoritesWidget({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            children: [
-              Container(
-                height: 108,
-                width: 108,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: SuperheroesColors.blue,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 9),
-                child: Image.asset(
-                  SuperheroesImages.ironman,
-                  height: 119,
-                  width: 108,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            "No favorites yet",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 32,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            "Search and add".toUpperCase(),
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 30),
-          ActionButton(text: "Search", onTap: () {})
-        ],
+      child: InfoWithButton(
+        title: "No favorites yet",
+        subtitle: "Search and add",
+        buttonText: "Search",
+        assetImage: SuperheroesImages.ironman,
+        imageHeight: 119,
+        imageWidth: 108,
+        imageTopPadding: 9,
+      ),
+    );
+  }
+}
+
+class NothingFoundWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: InfoWithButton(
+        title: "Nothing found",
+        subtitle: "Search for something else",
+        buttonText: "Search",
+        assetImage: SuperheroesImages.hulk,
+        imageHeight: 112,
+        imageWidth: 84,
+        imageTopPadding: 16,
+      ),
+    );
+  }
+}
+class LoadingErrorWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: InfoWithButton(
+        title: "Error happened",
+        subtitle: "Please, try Again",
+        buttonText: "Retry",
+        assetImage: SuperheroesImages.superman,
+        imageHeight: 106,
+        imageWidth: 126,
+        imageTopPadding: 22,
       ),
     );
   }

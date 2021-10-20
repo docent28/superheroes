@@ -257,7 +257,7 @@ class LoadingErrorWidget extends StatelessWidget {
     return Center(
       child: InfoWithButton(
         title: "Error happened",
-        subtitle: "Please, try Again",
+        subtitle: "Please, try again",
         buttonText: "Retry",
         assetImage: SuperheroesImages.superman,
         imageHeight: 106,

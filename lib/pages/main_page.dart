@@ -54,6 +54,35 @@ class MainPageContent extends StatelessWidget {
             text: "Next state",
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 12,
+          ),
+          child: TextField(
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.white54,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: Colors.white24,
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -251,6 +280,7 @@ class NothingFoundWidget extends StatelessWidget {
     );
   }
 }
+
 class LoadingErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

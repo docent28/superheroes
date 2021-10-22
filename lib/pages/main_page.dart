@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/pages/superhero_page.dart';
@@ -78,7 +79,10 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   void initState() {
     super.initState();
-    controller.addListener(() => print("CONTROLLER: ${controller}"));
+    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+      controller.addListener(() => bloc.updateText(controller.text));
+    });
   }
 
   @override
@@ -86,7 +90,6 @@ class _SearchWidgetState extends State<SearchWidget> {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return TextField(
       controller: controller,
-      onChanged: (text) => bloc.updateText(text),
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w400,

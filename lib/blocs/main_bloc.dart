@@ -37,3 +37,15 @@ enum MainPageState {
   searchResults,
   favorites,
 }
+
+class SuperheroInfo {
+
+  final String name;
+  final String realName;
+  final String imageUrl;
+
+  const SuperheroInfo(this.name, this.realName, this.imageUrl);
+
+
+
+}

@@ -48,13 +48,6 @@ class MainPageContent extends StatelessWidget {
     return Stack(
       children: [
         const MainPageStateWidget(),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: ActionButton(
-            onTap: () => bloc.nextState(),
-            text: "Next state",
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.only(
             left: 16,
@@ -146,9 +139,15 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.noFavorites:
             return NoFavoritesWidget();
           case MainPageState.favorites:
-            return const FavoritesWidget();
+            return SuperheroesList(
+              title: "Your favorites",
+              stream: bloc.observeFavoritesSuperheroes(),
+            );
           case MainPageState.searchResults:
-            return const SearchResultsWidget();
+            return SuperheroesList(
+              title: "Search results",
+              stream: bloc.observeSearchedSuperheroes(),
+            );
           case MainPageState.nothingFound:
             return NothingFoundWidget();
           case MainPageState.loadingError:
@@ -166,121 +165,64 @@ class MainPageStateWidget extends StatelessWidget {
   }
 }
 
-class FavoritesWidget extends StatelessWidget {
-  const FavoritesWidget({Key? key}) : super(key: key);
+class SuperheroesList extends StatelessWidget {
+  final String title;
+  final Stream<List<SuperheroInfo>> stream;
+
+  const SuperheroesList({
+    Key? key,
+    required this.title,
+    required this.stream,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 90),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            "Your favorites",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 24,
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SuperheroCard(
-            name: "Batman",
-            realName: "Bruce Wayne",
-            imageUrl:
-                "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SuperheroPage(name: "Batman"),
+    return StreamBuilder<List<SuperheroInfo>>(
+        stream: stream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data == null) {
+            return const SizedBox.shrink();
+          }
+          final List<SuperheroInfo> superheroes = snapshot.data!;
+          return ListView.separated(
+            itemCount: superheroes.length + 1,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 0) {
+                return Padding(
+                  padding:
+                      EdgeInsets.only(left: 16, right: 16, top: 90, bottom: 12),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 24,
+                    ),
+                  ),
+                );
+              }
+              final SuperheroInfo item = superheroes[index - 1];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SuperheroCard(
+                  name: item.name,
+                  realName: item.realName,
+                  imageUrl: item.imageUrl,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SuperheroPage(name: item.name),
+                      ),
+                    );
+                  },
                 ),
               );
             },
-          ),
-        ),
-        const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SuperheroCard(
-            name: "Ironman",
-            realName: "Tony Stark",
-            imageUrl:
-                "https://www.superherodb.com/pictures2/portraits/10/100/85.jpg",
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SuperheroPage(name: "Ironman"),
-                ),
-              );
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(height: 8);
             },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class SearchResultsWidget extends StatelessWidget {
-  const SearchResultsWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 90),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            "Search results",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 24,
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SuperheroCard(
-            name: "Batman",
-            realName: "Bruce Wayne",
-            imageUrl:
-                "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SuperheroPage(name: "Batman"),
-                ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SuperheroCard(
-            name: "Venom",
-            realName: "Eddie Brock",
-            imageUrl:
-                "https://www.superherodb.com/pictures2/portraits/10/100/22.jpg",
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SuperheroPage(name: "Venom"),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
+          );
+        });
   }
 }
 

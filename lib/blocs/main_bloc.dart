@@ -46,6 +46,12 @@ class MainBloc {
     );
   }
 
+  Stream<List<SuperheroInfo>> observeFavoritesSuperheroes() =>
+      favoritesSuperheroesSubject;
+
+  Stream<List<SuperheroInfo>> observeSearchedSuperheroes() =>
+      searchedSuperheroesSubject;
+
   Future<List<SuperheroInfo>> search(final String text) async {
     await Future.delayed(Duration(seconds: 1));
     return SuperheroInfo.mocked;

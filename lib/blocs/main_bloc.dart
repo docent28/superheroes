@@ -47,7 +47,8 @@ class MainBloc {
   }
 
   Future<List<SuperheroInfo>> search(final String text) async {
-    return [];
+    await Future.delayed(Duration(seconds: 1));
+    return SuperheroInfo.mocked;
   }
 
   Stream<MainPageState> observeMainPageState() => stateSubject;

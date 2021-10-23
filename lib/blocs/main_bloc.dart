@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 
 class MainBloc {
@@ -17,18 +18,28 @@ class MainBloc {
   MainBloc() {
     stateSubject.add(MainPageState.noFavorites);
 
-    textSubscription = currentTextSubject
-        .distinct()
-        .debounceTime(Duration(milliseconds: 500))
-        .listen((value) {
+    textSubscription =
+        Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
+      currentTextSubject.distinct().debounceTime(
+            Duration(milliseconds: 500),
+          ),
+      favoritesSuperheroesSubject,
+      (searchedText, favorites) =>
+          MainPageStateInfo(searchedText, favorites.isNotEmpty),
+    ).listen((value) {
       print("CHANGED $value");
       searchSubscription?.cancel();
-      if (value.isEmpty) {
+      if (value.searchText.isEmpty) {
+        if (value.haveFavotites) {
+          stateSubject.add(MainPageState.favorites);
+        } else {
+          stateSubject.add(MainPageState.noFavorites);
+        }
         stateSubject.add(MainPageState.favorites);
-      } else if (value.length < minSymbols) {
+      } else if (value.searchText.length < minSymbols) {
         stateSubject.add(MainPageState.minSymbols);
       } else {
-        searchForSuperheroes(value);
+        searchForSuperheroes(value.searchText);
       }
     });
   }
@@ -142,4 +153,27 @@ class SuperheroInfo {
       imageUrl: "https://www.superherodb.com/pictures2/portraits/10/100/22.jpg",
     ),
   ];
+}
+
+class MainPageStateInfo {
+  final String searchText;
+  final bool haveFavotites;
+
+  const MainPageStateInfo(this.searchText, this.haveFavotites);
+
+  @override
+  String toString() {
+    return 'MainPageStateInfo{searchText: $searchText, haveFavotites: $haveFavotites}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MainPageStateInfo &&
+          runtimeType == other.runtimeType &&
+          searchText == other.searchText &&
+          haveFavotites == other.haveFavotites;
+
+  @override
+  int get hashCode => searchText.hashCode ^ haveFavotites.hashCode;
 }

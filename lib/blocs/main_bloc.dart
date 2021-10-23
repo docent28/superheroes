@@ -17,7 +17,11 @@ class MainBloc {
   MainBloc() {
     stateSubject.add(MainPageState.noFavorites);
 
-    textSubscription = currentTextSubject.listen((value) {
+    textSubscription = currentTextSubject
+        .distinct()
+        .debounceTime(Duration(milliseconds: 500))
+        .listen((value) {
+      print("CHANGED $value");
       searchSubscription?.cancel();
       if (value.isEmpty) {
         stateSubject.add(MainPageState.favorites);

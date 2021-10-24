@@ -76,7 +76,6 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return TextField(
       controller: controller,
       style: TextStyle(

@@ -201,9 +201,10 @@ class SuperheroesList extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SuperheroCard(
-                  name: item.name,
-                  realName: item.realName,
-                  imageUrl: item.imageUrl,
+                  superheroInfo: superheroes[index - 1],
+                  // name: item.name,
+                  // realName: item.realName,
+                  // imageUrl: item.imageUrl,
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

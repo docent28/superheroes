@@ -5,6 +5,7 @@ import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
+import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
@@ -148,11 +149,29 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.minSymbols:
             return const MinSymbolsWidget();
           case MainPageState.noFavorites:
-            return NoFavoritesWidget();
+            return Stack(
+              children: [
+                NoFavoritesWidget(),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child:
+                      ActionButton(text: "Remove", onTap: bloc.removeFavorite),
+                ),
+              ],
+            );
           case MainPageState.favorites:
-            return SuperheroesList(
-              title: "Your favorites",
-              stream: bloc.observeFavoritesSuperheroes(),
+            return Stack(
+              children: [
+                SuperheroesList(
+                  title: "Your favorites",
+                  stream: bloc.observeFavoritesSuperheroes(),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child:
+                      ActionButton(text: "Remove", onTap: bloc.removeFavorite),
+                ),
+              ],
             );
           case MainPageState.searchResults:
             return SuperheroesList(

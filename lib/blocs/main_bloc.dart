@@ -69,8 +69,8 @@ class MainBloc {
   Future<List<SuperheroInfo>> search(final String text) async {
     await Future.delayed(Duration(seconds: 1));
     return SuperheroInfo.mocked
-        .where((element) =>
-            element.name.toUpperCase().contains(text.toUpperCase()))
+        .where((superheroInfo) =>
+            superheroInfo.name.toUpperCase().contains(text.toUpperCase()))
         .toList();
   }
 

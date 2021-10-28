@@ -60,7 +60,7 @@ class MainBloc {
     );
   }
 
-  Stream<List<SuperheroInfo>> observeFavoritesSuperheroes() =>
+  Stream<List<SuperheroInfo>> observeFavoriteSuperheroes() =>
       favoriteSuperheroesSubject;
 
   Stream<List<SuperheroInfo>> observeSearchedSuperheroes() =>

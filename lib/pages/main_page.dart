@@ -164,7 +164,7 @@ class MainPageStateWidget extends StatelessWidget {
               children: [
                 SuperheroesList(
                   title: "Your favorites",
-                  stream: bloc.observeFavoritesSuperheroes(),
+                  stream: bloc.observeFavoriteSuperheroes(),
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,

@@ -6,7 +6,7 @@ class MainBloc {
   static const minSymbols = 3;
 
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
-  final favoritesSuperheroesSubject =
+  final favoriteSuperheroesSubject =
       BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
   final searchedSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();
   final currentTextSubject = BehaviorSubject<String>.seeded("");
@@ -22,7 +22,7 @@ class MainBloc {
       currentTextSubject.distinct().debounceTime(
             Duration(milliseconds: 500),
           ),
-      favoritesSuperheroesSubject,
+      favoriteSuperheroesSubject,
       (searchedText, favorites) =>
           MainPageStateInfo(searchedText, favorites.isNotEmpty),
     ).listen((value) {
@@ -61,7 +61,7 @@ class MainBloc {
   }
 
   Stream<List<SuperheroInfo>> observeFavoritesSuperheroes() =>
-      favoritesSuperheroesSubject;
+      favoriteSuperheroesSubject;
 
   Stream<List<SuperheroInfo>> observeSearchedSuperheroes() =>
       searchedSuperheroesSubject;
@@ -78,12 +78,13 @@ class MainBloc {
 
   void removeFavorite() {
     final List<SuperheroInfo> currentFavorites =
-        favoritesSuperheroesSubject.value;
+        favoriteSuperheroesSubject.value;
     if (currentFavorites.isEmpty) {
-      favoritesSuperheroesSubject.add(SuperheroInfo.mocked);
+      favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
     } else {
-      favoritesSuperheroesSubject
-          .add(currentFavorites.sublist(0, currentFavorites.length - 1));
+      favoriteSuperheroesSubject.add(
+        currentFavorites.sublist(0, currentFavorites.length - 1),
+      );
     }
   }
 
@@ -101,7 +102,7 @@ class MainBloc {
 
   void dispose() {
     stateSubject.close();
-    favoritesSuperheroesSubject.close();
+    favoriteSuperheroesSubject.close();
     searchedSuperheroesSubject.close();
     currentTextSubject.close();
 

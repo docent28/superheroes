@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:http/http.dart' as http;
@@ -69,12 +71,22 @@ class MainBloc {
 
   Future<List<SuperheroInfo>> search(final String text) async {
     await Future.delayed(Duration(seconds: 1));
-    final respponse = await http
-        .get(Uri.parse("https://postman-echo.com/get?foo1=bar1&foo2=bar2"));
-    print(respponse.statusCode);
-    print(respponse.reasonPhrase);
-    print(respponse.headers);
-    print(respponse.body);
+    final token = dotenv.env["SUPERHERO_TOKEN"];
+    final response = await http
+        .get(Uri.parse("https://superheroapi.com/api/$token/search/$text"));
+    final decoded = json.decode(response.body);
+    print(decoded);
+    if (decoded['responce'] == 'success') {
+      final List<dynamic> results = decoded['results'];
+      final List<SuperheroInfo> found = results.map((rawSuperhero) {
+        return SuperheroInfo(
+          name: rawSuperhero['name'],
+          realName: rawSuperhero['biography']['full-name'],
+          imageUrl: rawSuperhero['image']['url'],
+        );
+      }).toList();
+      return found;
+    }
     return SuperheroInfo.mocked
         .where((superheroInfo) =>
             superheroInfo.name.toUpperCase().contains(text.toUpperCase()))

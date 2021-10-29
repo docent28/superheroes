@@ -37,7 +37,7 @@ class MainBloc {
         } else {
           stateSubject.add(MainPageState.noFavorites);
         }
-        stateSubject.add(MainPageState.favorites);
+//        stateSubject.add(MainPageState.favorites);
       } else if (value.searchText.length < minSymbols) {
         stateSubject.add(MainPageState.minSymbols);
       } else {
@@ -86,11 +86,16 @@ class MainBloc {
         );
       }).toList();
       return found;
+    } else if (decoded['responce'] == 'error') {
+      if (decoded['error'] == 'character with given name not found') {
+        return [];
+      }
     }
-    return SuperheroInfo.mocked
-        .where((superheroInfo) =>
-            superheroInfo.name.toUpperCase().contains(text.toUpperCase()))
-        .toList();
+    throw Exception("Unknown error happened");
+    // return SuperheroInfo.mocked
+    //     .where((superheroInfo) =>
+    //         superheroInfo.name.toUpperCase().contains(text.toUpperCase()))
+    //     .toList();
   }
 
   Stream<MainPageState> observeMainPageState() => stateSubject;

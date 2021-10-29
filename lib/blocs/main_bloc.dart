@@ -35,7 +35,6 @@ class MainBloc {
         } else {
           stateSubject.add(MainPageState.noFavorites);
         }
-        stateSubject.add(MainPageState.favorites);
       } else if (value.searchText.length < minSymbols) {
         stateSubject.add(MainPageState.minSymbols);
       } else {

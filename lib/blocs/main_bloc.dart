@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:http/http.dart' as http;
+import 'package:superheroes/model/superhero.dart';
 
 class MainBloc {
   static const minSymbols = 3;
@@ -71,16 +72,20 @@ class MainBloc {
   Future<List<SuperheroInfo>> search(final String text) async {
     await Future.delayed(Duration(seconds: 1));
     final token = dotenv.env["SUPERHERO_TOKEN"];
-    final response = await http.get(Uri.parse("https://superheroapi.com/api/$token/search/$text"));
+    final response = await http
+        .get(Uri.parse("https://superheroapi.com/api/$token/search/$text"));
     final decoded = json.decode(response.body);
     print(decoded);
     if (decoded['response'] == 'success') {
       final List<dynamic> results = decoded['results'];
-      final List<SuperheroInfo> found = results.map((rawSuperhero) {
+      final List<Superhero> superheroes = results
+          .map((rawSuperhero) => Superhero.fromJson(rawSuperhero))
+          .toList();
+      final List<SuperheroInfo> found = superheroes.map((superhero) {
         return SuperheroInfo(
-          name: rawSuperhero['name'],
-          realName: rawSuperhero['biography']['full-name'],
-          imageUrl: rawSuperhero['image']['url'],
+          name: superhero.name,
+          realName: superhero.biography.fullName,
+          imageUrl: superhero.image.url,
         );
       }).toList();
       return found;

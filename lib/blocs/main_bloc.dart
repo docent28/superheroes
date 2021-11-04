@@ -70,7 +70,6 @@ class MainBloc {
       searchedSuperheroesSubject;
 
   Future<List<SuperheroInfo>> search(final String text) async {
-    await Future.delayed(Duration(seconds: 1));
     final token = dotenv.env["SUPERHERO_TOKEN"];
     final response = await http
         .get(Uri.parse("https://superheroapi.com/api/$token/search/$text"));

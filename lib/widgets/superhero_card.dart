@@ -26,11 +26,21 @@ class SuperheroCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CachedNetworkImage(
+            Container(
+              color: Colors.white24,
+              width: 70,
+              height: 70,
+              child: CachedNetworkImage(
                 imageUrl: superheroInfo.imageUrl,
                 height: 70,
                 width: 70,
-                fit: BoxFit.cover),
+                fit: BoxFit.cover,
+                progressIndicatorBuilder: (context,url, progress)=> CircularProgressIndicator(
+                  color: SuperheroesColors.blue,
+                  value: progress.progress,
+                ),
+              ),
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

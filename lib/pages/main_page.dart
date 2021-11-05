@@ -153,7 +153,7 @@ class MainPageStateWidget extends StatelessWidget {
         final MainPageState state = snapshot.data!;
         switch (state) {
           case MainPageState.loading:
-            return const LoadingIndicator();
+            return LoadingIndicator();
           case MainPageState.minSymbols:
             return const MinSymbolsWidget();
           case MainPageState.noFavorites:
@@ -339,13 +339,13 @@ class MinSymbolsWidget extends StatelessWidget {
 }
 
 class LoadingIndicator extends StatelessWidget {
-  const LoadingIndicator({
+  LoadingIndicator({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Align(
+    return Align(
       alignment: Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.only(top: 110),

@@ -66,6 +66,11 @@ class MainBloc {
     );
   }
 
+  void retry(){
+    final currentText = currentTextSubject.value;
+    searchForSuperheroes(currentText);
+  }
+
   Stream<List<SuperheroInfo>> observeFavoriteSuperheroes() =>
       favoriteSuperheroesSubject;
 

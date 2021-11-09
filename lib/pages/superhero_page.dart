@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:superheroes/model/biography.dart';
 import 'package:superheroes/model/powerstats.dart';
@@ -250,7 +253,36 @@ class ArcWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return CustomPaint(
+      painter: ArcCustomPainter(value, color),
+      size: Size(66, 33),
+    );
+  }
+}
+
+class ArcCustomPainter extends CustomPainter {
+  final double value;
+  final Color color;
+
+  ArcCustomPainter(this.value, this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height * 2);
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 6;
+    canvas.drawArc(rect, pi, pi * value, false, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    if (oldDelegate is ArcCustomPainter) {
+      return oldDelegate.value != value && oldDelegate.color != color;
+    }
+    return true;
   }
 }
 

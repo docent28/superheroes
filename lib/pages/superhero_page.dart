@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:superheroes/model/biography.dart';
 import 'package:superheroes/model/powerstats.dart';
@@ -39,7 +40,33 @@ class SuperheroPage extends StatelessWidget {
     );
     return Scaffold(
       backgroundColor: SuperheroesColors.background,
-      body: SafeArea(child: Container()),
+      body: CustomScrollView(
+        physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        slivers: [
+          SliverAppBar(
+            stretch: true,
+            pinned: true,
+            floating: true,
+            expandedHeight: 348,
+            backgroundColor: SuperheroesColors.background,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                superhero.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                  fontSize: 22,
+                ),
+              ),
+              centerTitle: true,
+              background: CachedNetworkImage(
+                imageUrl: superhero.image.url,
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

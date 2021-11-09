@@ -43,29 +43,94 @@ class SuperheroPage extends StatelessWidget {
       body: CustomScrollView(
         physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         slivers: [
-          SliverAppBar(
-            stretch: true,
-            pinned: true,
-            floating: true,
-            expandedHeight: 348,
-            backgroundColor: SuperheroesColors.background,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                superhero.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                  fontSize: 22,
-                ),
-              ),
-              centerTitle: true,
-              background: CachedNetworkImage(
-                imageUrl: superhero.image.url,
-                fit: BoxFit.cover,
-              ),
+          SuperheroAppBar(superhero: superhero),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                if (superhero.powerstats.isNotNull())
+                  PowerstatsWidget(powerstats: superhero.powerstats),
+                BiographyWidget(biography: superhero.biography),
+              ],
             ),
-          )
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class SuperheroAppBar extends StatelessWidget {
+  const SuperheroAppBar({
+    Key? key,
+    required this.superhero,
+  }) : super(key: key);
+
+  final Superhero superhero;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      stretch: true,
+      pinned: true,
+      floating: true,
+      expandedHeight: 348,
+      backgroundColor: SuperheroesColors.background,
+      flexibleSpace: FlexibleSpaceBar(
+        title: Text(
+          superhero.name,
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+            fontSize: 22,
+          ),
+        ),
+        centerTitle: true,
+        background: CachedNetworkImage(
+          imageUrl: superhero.image.url,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+}
+
+class PowerstatsWidget extends StatelessWidget {
+  final Powerstats powerstats;
+
+  const PowerstatsWidget({
+    Key? key,
+    required this.powerstats,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      alignment: Alignment.center,
+      child: Text(
+        powerstats.toJson().toString(),
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+}
+
+class BiographyWidget extends StatelessWidget {
+  final Biography biography;
+
+  const BiographyWidget({
+    Key? key,
+    required this.biography,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      alignment: Alignment.center,
+      child: Text(
+        biography.toJson().toString(),
+        style: TextStyle(color: Colors.white),
       ),
     );
   }

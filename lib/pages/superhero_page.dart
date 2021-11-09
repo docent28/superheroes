@@ -269,11 +269,17 @@ class ArcCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Rect.fromLTWH(0, 0, size.width, size.height * 2);
+    final backgroundPaint = Paint()
+      ..color = Colors.white24
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 6;
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 6;
+    canvas.drawArc(rect, pi, pi, false, backgroundPaint);
     canvas.drawArc(rect, pi, pi * value, false, paint);
   }
 

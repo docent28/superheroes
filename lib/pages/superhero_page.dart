@@ -3,25 +3,63 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:superheroes/blocs/superhero_bloc.dart';
 import 'package:superheroes/model/biography.dart';
 import 'package:superheroes/model/powerstats.dart';
 import 'package:superheroes/model/server_image.dart';
 import 'package:superheroes/model/superhero.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/widgets/action_button.dart';
+import 'package:http/http.dart' as http;
 
-class SuperheroPage extends StatelessWidget {
+class SuperheroPage extends StatefulWidget {
+  final http.Client? client;
   final String id;
 
-  const SuperheroPage({
+  SuperheroPage({
     Key? key,
+    this.client,
     required this.id,
   }) : super(key: key);
 
   @override
+  _SuperheroPageState createState() => _SuperheroPageState();
+}
+
+class _SuperheroPageState extends State<SuperheroPage> {
+  late SuperheroBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = SuperheroBloc(client: widget.client, id: widget.id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Provider.value(
+      value: bloc,
+      child: Scaffold(
+        backgroundColor: SuperheroesColors.background,
+        body: SuperheroContentPage(),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+}
+
+class SuperheroContentPage extends StatelessWidget {
+
+  @override
   Widget build(BuildContext context) {
     final superhero = Superhero(
-      id: id,
+      id: "70",
       name: "Batman",
       biography: Biography(
         fullName: "Batman Anatol'evich",
@@ -41,9 +79,7 @@ class SuperheroPage extends StatelessWidget {
         combat: "90",
       ),
     );
-    return Scaffold(
-      backgroundColor: SuperheroesColors.background,
-      body: CustomScrollView(
+    return CustomScrollView(
         physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         slivers: [
           SuperheroAppBar(superhero: superhero),
@@ -58,7 +94,6 @@ class SuperheroPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
     );
   }
 }

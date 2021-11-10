@@ -10,7 +10,6 @@ import 'package:superheroes/model/powerstats.dart';
 import 'package:superheroes/model/server_image.dart';
 import 'package:superheroes/model/superhero.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
-import 'package:superheroes/widgets/action_button.dart';
 import 'package:http/http.dart' as http;
 
 class SuperheroPage extends StatefulWidget {

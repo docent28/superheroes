@@ -23,7 +23,7 @@ class FavoriteSuperheroesStorage {
     final updatedRawSuperheroes = superheroes
         .map((superhero) => json.encode(superhero.toJson()))
         .toList();
-    return sp.setStringList(_key, rawSuperheroes);
+    return sp.setStringList(_key, updatedRawSuperheroes);
   }
 
   Future<Superhero?> getSuperhero(final String id) {

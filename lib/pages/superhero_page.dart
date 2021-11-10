@@ -96,37 +96,13 @@ class SuperheroAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<SuperheroBloc>(context, listen: false);
     return SliverAppBar(
       stretch: true,
       pinned: true,
       floating: true,
       expandedHeight: 348,
       actions: [
-        StreamBuilder<bool>(
-          stream: bloc.observeIsFavorite(),
-          initialData: false,
-          builder: (context, snapshot) {
-            final favorite =
-                !snapshot.hasData || snapshot.data == null || snapshot.data!;
-            return GestureDetector(
-              onTap: () =>
-                  favorite ? bloc.removeFromFavorites() : bloc.addToFavorite(),
-              child: Container(
-                height: 52,
-                width: 52,
-                alignment: Alignment.center,
-                child: Image.asset(
-                  favorite
-                      ? SuperheroesIcons.starFilled
-                      : SuperheroesIcons.starEmpty,
-                  height: 32,
-                  width: 32,
-                ),
-              ),
-            );
-          },
-        )
+        FavoriteButton()
       ],
       backgroundColor: SuperheroesColors.background,
       flexibleSpace: FlexibleSpaceBar(
@@ -144,6 +120,38 @@ class SuperheroAppBar extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
+    );
+  }
+}
+
+class FavoriteButton extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<SuperheroBloc>(context, listen: false);
+    return StreamBuilder<bool>(
+      stream: bloc.observeIsFavorite(),
+      initialData: false,
+      builder: (context, snapshot) {
+        final favorite =
+            !snapshot.hasData || snapshot.data == null || snapshot.data!;
+        return GestureDetector(
+          onTap: () =>
+              favorite ? bloc.removeFromFavorites() : bloc.addToFavorite(),
+          child: Container(
+            height: 52,
+            width: 52,
+            alignment: Alignment.center,
+            child: Image.asset(
+              favorite
+                  ? SuperheroesIcons.starFilled
+                  : SuperheroesIcons.starEmpty,
+              height: 32,
+              width: 32,
+            ),
+          ),
+        );
+      },
     );
   }
 }

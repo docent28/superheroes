@@ -10,6 +10,7 @@ import 'package:superheroes/model/powerstats.dart';
 import 'package:superheroes/model/superhero.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:superheroes/resources/superheroes_icons.dart';
 
 class SuperheroPage extends StatefulWidget {
   final http.Client? client;
@@ -95,11 +96,38 @@ class SuperheroAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<SuperheroBloc>(context, listen: false);
     return SliverAppBar(
       stretch: true,
       pinned: true,
       floating: true,
       expandedHeight: 348,
+      actions: [
+        StreamBuilder<bool>(
+          stream: bloc.observeIsFavorite(),
+          initialData: false,
+          builder: (context, snapshot) {
+            final favorite =
+                !snapshot.hasData || snapshot.data == null || snapshot.data!;
+            return GestureDetector(
+              onTap: () =>
+                  favorite ? bloc.removeFromFavorites() : bloc.addToFavorite(),
+              child: Container(
+                height: 52,
+                width: 52,
+                alignment: Alignment.center,
+                child: Image.asset(
+                  favorite
+                      ? SuperheroesIcons.starFilled
+                      : SuperheroesIcons.starEmpty,
+                  height: 32,
+                  width: 32,
+                ),
+              ),
+            );
+          },
+        )
+      ],
       backgroundColor: SuperheroesColors.background,
       flexibleSpace: FlexibleSpaceBar(
         title: Text(

@@ -19,6 +19,16 @@ class SuperheroBloc {
     requestSuperhero();
   }
 
+  void addToFavorite(){
+
+  }
+
+  void removeFromFavorites(){
+
+  }
+
+  Stream<bool> observeIsFavorite()=> Stream.value(false);
+
   void requestSuperhero() {
     requestSubscription?.cancel();
     requestSubscription = request().asStream().listen(

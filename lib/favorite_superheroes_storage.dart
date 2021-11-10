@@ -11,15 +11,15 @@ class FavoriteSuperheroesStorage {
   }
 
   Future<Superhero?> getSuperhero(final String id) {
-    throw UnimplementedError()
+    throw UnimplementedError();
   }
 
   Stream<List<Superhero>> observeFavoriteSuperheroes(){
-    throw UnimplementedError()
+    throw UnimplementedError();
   }
 
   Stream<List<Superhero>> observeIsFavorite(final String id){
-    throw UnimplementedError()
+    throw UnimplementedError();
   }
 
 }

@@ -15,7 +15,9 @@ class SuperheroBloc {
 
   StreamSubscription? requestSubscription;
 
-  SuperheroBloc({this.client, required this.id}) {}
+  SuperheroBloc({this.client, required this.id}) {
+    requestSuperhero();
+  }
 
   void requestSuperhero() {
     requestSubscription?.cancel();

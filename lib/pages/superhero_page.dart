@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/superhero_bloc.dart';
 import 'package:superheroes/model/biography.dart';
 import 'package:superheroes/model/powerstats.dart';
-import 'package:superheroes/model/server_image.dart';
 import 'package:superheroes/model/superhero.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:http/http.dart' as http;
@@ -54,45 +53,34 @@ class _SuperheroPageState extends State<SuperheroPage> {
 }
 
 class SuperheroContentPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    final superhero = Superhero(
-      id: "70",
-      name: "Batman",
-      biography: Biography(
-        fullName: "Batman Anatol'evich",
-        alignment: "good",
-        aliases: ["Batmanovich", "Protector of the Realm"],
-        placeOfBirth: "Russia, St. Petersburg",
-      ),
-      image: ServerImage(
-        "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg",
-      ),
-      powerstats: Powerstats(
-        intelligence: "81",
-        strength: "40",
-        speed: "29",
-        durability: "55",
-        power: "63",
-        combat: "90",
-      ),
-    );
-    return CustomScrollView(
-        physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        slivers: [
-          SuperheroAppBar(superhero: superhero),
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const SizedBox(height: 30),
-                if (superhero.powerstats.isNotNull())
-                  PowerstatsWidget(powerstats: superhero.powerstats),
-                BiographyWidget(biography: superhero.biography),
-              ],
+    final bloc = Provider.of<SuperheroBloc>(context, listen: false);
+    return StreamBuilder<Superhero>(
+      stream: bloc.observeSuperhero(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const SizedBox.shrink();
+        }
+        final superhero = snapshot.data!;
+        return CustomScrollView(
+          physics:
+              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          slivers: [
+            SuperheroAppBar(superhero: superhero),
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  const SizedBox(height: 30),
+                  if (superhero.powerstats.isNotNull())
+                    PowerstatsWidget(powerstats: superhero.powerstats),
+                  BiographyWidget(biography: superhero.biography),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        );
+      },
     );
   }
 }

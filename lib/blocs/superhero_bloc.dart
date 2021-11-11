@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 import 'package:superheroes/exception/api_exception.dart';
+import 'package:superheroes/favorite_superheroes_storage.dart';
 import 'package:superheroes/model/superhero.dart';
 
 class SuperheroBloc {
@@ -14,20 +15,49 @@ class SuperheroBloc {
   final superheroSubject = BehaviorSubject<Superhero>();
 
   StreamSubscription? requestSubscription;
+  StreamSubscription? addToFavoriteSubscription;
+  StreamSubscription? removeFromFavoriteSubscription;
 
   SuperheroBloc({this.client, required this.id}) {
     requestSuperhero();
   }
 
-  void addToFavorite(){
+  void addToFavorite() {
+    final superhero = superheroSubject.valueOrNull;
+    if (superhero == null) {
+      print("ERROR: superhero is null while shouldn't be");
+      return;
+    }
 
+    addToFavoriteSubscription?.cancel();
+    addToFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
+        .addToFavorites(superhero)
+        .asStream()
+        .listen(
+      (event) {
+        print("Added to favorites: $event");
+      },
+      onError: (error, stackTrace) =>
+          print("Error happened in addToFavorite: $error, $stackTrace"),
+    );
   }
 
-  void removeFromFavorites(){
-
+  void removeFromFavorites() {
+    removeFromFavoriteSubscription?.cancel();
+    removeFromFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
+        .removeFromFavorites(id)
+        .asStream()
+        .listen(
+      (event) {
+        print("Remove from favorites: $event");
+      },
+      onError: (error, stackTrace) =>
+          print("Error happened in removeFromFavorites: $error, $stackTrace"),
+    );
   }
 
-  Stream<bool> observeIsFavorite()=> Stream.value(false);
+  Stream<bool> observeIsFavorite() =>
+      FavoriteSuperheroesStorage.getInstance().observeIsFavorite(id);
 
   void requestSuperhero() {
     requestSubscription?.cancel();
@@ -67,6 +97,8 @@ class SuperheroBloc {
   void dispose() {
     client?.close();
     requestSubscription?.cancel();
+    addToFavoriteSubscription?.cancel();
+    removeFromFavoriteSubscription?.cancel();
 
     superheroSubject.close();
   }

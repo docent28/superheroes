@@ -101,9 +101,7 @@ class SuperheroAppBar extends StatelessWidget {
       pinned: true,
       floating: true,
       expandedHeight: 348,
-      actions: [
-        FavoriteButton()
-      ],
+      actions: [FavoriteButton()],
       backgroundColor: SuperheroesColors.background,
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
@@ -125,7 +123,6 @@ class SuperheroAppBar extends StatelessWidget {
 }
 
 class FavoriteButton extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SuperheroBloc>(context, listen: false);

@@ -82,6 +82,7 @@ class _MainPageContentState extends State<MainPageContent> {
       ],
     );
   }
+
   @override
   void dispose() {
     searchFieldFocusNode.dispose();
@@ -193,29 +194,12 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.minSymbols:
             return const MinSymbolsWidget();
           case MainPageState.noFavorites:
-            return Stack(
-              children: [
-                NoFavoritesWidget(searchFieldFocusNode: searchFieldFocusNode),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child:
-                      ActionButton(text: "Remove", onTap: bloc.removeFavorite),
-                ),
-              ],
-            );
+            return NoFavoritesWidget(
+                searchFieldFocusNode: searchFieldFocusNode);
           case MainPageState.favorites:
-            return Stack(
-              children: [
-                SuperheroesList(
-                  title: "Your favorites",
-                  stream: bloc.observeFavoriteSuperheroes(),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child:
-                      ActionButton(text: "Remove", onTap: bloc.removeFavorite),
-                ),
-              ],
+            return SuperheroesList(
+              title: "Your favorites",
+              stream: bloc.observeFavoriteSuperheroes(),
             );
           case MainPageState.searchResults:
             return SuperheroesList(

@@ -14,12 +14,30 @@ class SuperheroBloc {
 
   final superheroSubject = BehaviorSubject<Superhero>();
 
+  StreamSubscription? getFromFavoritesSubscription;
   StreamSubscription? requestSubscription;
   StreamSubscription? addToFavoriteSubscription;
   StreamSubscription? removeFromFavoriteSubscription;
 
   SuperheroBloc({this.client, required this.id}) {
-    requestSuperhero();
+    getFromFavorites();
+  }
+
+  void getFromFavorites() {
+    getFromFavoritesSubscription?.cancel();
+    getFromFavoritesSubscription = FavoriteSuperheroesStorage.getInstance()
+        .getSuperhero(id)
+        .asStream()
+        .listen(
+      (superhero) {
+        if (superhero != null) {
+          superheroSubject.add(superhero);
+        }
+        requestSuperhero();
+      },
+      onError: (error, stackTrace) =>
+          print("Error happened in removeFromFavorites: $error, $stackTrace"),
+    );
   }
 
   void addToFavorite() {
@@ -96,6 +114,7 @@ class SuperheroBloc {
 
   void dispose() {
     client?.close();
+    getFromFavoritesSubscription?.cancel();
     requestSubscription?.cancel();
     addToFavoriteSubscription?.cancel();
     removeFromFavoriteSubscription?.cancel();

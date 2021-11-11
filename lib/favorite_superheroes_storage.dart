@@ -9,6 +9,13 @@ class FavoriteSuperheroesStorage {
 
   final updater = PublishSubject<Null>();
 
+  static FavoriteSuperheroesStorage? _instance;
+
+  factory FavoriteSuperheroesStorage.getInstance() =>
+      _instance ??= FavoriteSuperheroesStorage._internal();
+
+  FavoriteSuperheroesStorage._internal();
+
   Future<bool> addToFavorites(final Superhero superhero) async {
     final rawSuperheroes = await _getRawSuperheroes();
     rawSuperheroes.add(json.encode(superhero.toJson()));

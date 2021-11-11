@@ -7,23 +7,39 @@ class FavoriteSuperheroesStorage {
   static const _key = "favorite_superheroes";
 
   Future<bool> addToFavorites(final Superhero superhero) async {
-    final sp = await SharedPreferences.getInstance();
-    final rawSuperheroes = sp.getStringList(_key) ?? [];
+    final rawSuperheroes = await _getRawSuperheroes();
     rawSuperheroes.add(json.encode(superhero.toJson()));
-    return sp.setStringList(_key, rawSuperheroes);
+    return _setRawSuperheroes(rawSuperheroes);
   }
 
   Future<bool> removeFromFavorites(final String id) async {
+    final superheroes = await _getSuperheroes();
+    superheroes.removeWhere((superhero) => superhero.id == id);
+    return _setSuperheroes(superheroes);
+  }
+
+  Future<List<String>> _getRawSuperheroes() async {
     final sp = await SharedPreferences.getInstance();
-    final rawSuperheroes = sp.getStringList(_key) ?? [];
-    final superheroes = rawSuperheroes
+    return sp.getStringList(_key) ?? [];
+  }
+
+  Future<bool> _setRawSuperheroes(final List<String> rawSuperheroes) async {
+    final sp = await SharedPreferences.getInstance();
+    return sp.setStringList(_key, rawSuperheroes);
+  }
+
+  Future<List<Superhero>> _getSuperheroes() async {
+    final rawSuperheroes = await _getRawSuperheroes();
+    return rawSuperheroes
         .map((rawSuperhero) => Superhero.fromJson(json.decode(rawSuperhero)))
         .toList();
-    superheroes.removeWhere((superhero) => superhero.id == id);
-    final updatedRawSuperheroes = superheroes
+  }
+
+  Future<bool> _setSuperheroes(final List<Superhero> superheroes) async {
+    final rawSuperheroes = superheroes
         .map((superhero) => json.encode(superhero.toJson()))
         .toList();
-    return sp.setStringList(_key, updatedRawSuperheroes);
+    return _setRawSuperheroes(rawSuperheroes);
   }
 
   Future<Superhero?> getSuperhero(final String id) {

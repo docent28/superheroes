@@ -199,11 +199,13 @@ class MainPageStateWidget extends StatelessWidget {
             return SuperheroesList(
               title: "Your favorites",
               stream: bloc.observeFavoriteSuperheroes(),
+              ableToSwipe: true,
             );
           case MainPageState.searchResults:
             return SuperheroesList(
               title: "Search results",
               stream: bloc.observeSearchedSuperheroes(),
+              ableToSwipe: false,
             );
           case MainPageState.nothingFound:
             return NothingFoundWidget(
@@ -227,11 +229,13 @@ class MainPageStateWidget extends StatelessWidget {
 class SuperheroesList extends StatelessWidget {
   final String title;
   final Stream<List<SuperheroInfo>> stream;
+  final bool ableToSwipe;
 
   const SuperheroesList({
     Key? key,
     required this.title,
     required this.stream,
+    required this.ableToSwipe,
   }) : super(key: key);
 
   @override
@@ -253,7 +257,10 @@ class SuperheroesList extends StatelessWidget {
               return ListTitleWidget(title: title);
             }
             final SuperheroInfo item = superheroes[index - 1];
-            return ListTile(superhero: item);
+            return ListTile(
+              superhero: item,
+              ableToSwipe: ableToSwipe,
+            );
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(height: 8);
@@ -266,48 +273,58 @@ class SuperheroesList extends StatelessWidget {
 
 class ListTile extends StatelessWidget {
   final SuperheroInfo superhero;
+  final bool ableToSwipe;
 
   const ListTile({
     Key? key,
     required this.superhero,
+    required this.ableToSwipe,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Dismissible(
-        key: ValueKey(superhero.id),
-        child: SuperheroCard(
-          superheroInfo: superhero,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SuperheroPage(id: superhero.id),
-              ),
-            );
-          },
-        ),
-        background: Container(
-          height: 70,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: SuperheroesColors.red,
+    final card = SuperheroCard(
+      superheroInfo: superhero,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => SuperheroPage(id: superhero.id),
           ),
-          child: Text(
-            "Remove from favorites".toUpperCase(),
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
+        );
+      },
+    );
+    if (ableToSwipe) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Dismissible(
+          key: ValueKey(superhero.id),
+          child: card,
+          background: Container(
+            height: 70,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: SuperheroesColors.red,
+            ),
+            child: Text(
+              "Remove from favorites".toUpperCase(),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
+          onDismissed: (_) => bloc.removeFromFavorites(superhero.id),
         ),
-        onDismissed: (_) => bloc.removeFromFavorites(superhero.id),
-      ),
-    );
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: card,
+      );
+    }
   }
 }
 

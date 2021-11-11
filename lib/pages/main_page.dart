@@ -294,37 +294,49 @@ class ListTile extends StatelessWidget {
         );
       },
     );
-    if (ableToSwipe) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Dismissible(
-          key: ValueKey(superhero.id),
-          child: card,
-          background: Container(
-            height: 70,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: SuperheroesColors.red,
-            ),
-            child: Text(
-              "Remove from favorites".toUpperCase(),
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          onDismissed: (_) => bloc.removeFromFavorites(superhero.id),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ableToSwipe
+          ? Dismissible(
+              key: ValueKey(superhero.id),
+              child: card,
+              background: BackgroundCard(isLeft: true),
+              secondaryBackground: BackgroundCard(isLeft: false),
+              onDismissed: (_) => bloc.removeFromFavorites(superhero.id),
+            )
+          : card,
+    );
+  }
+}
+
+class BackgroundCard extends StatelessWidget {
+  final bool isLeft;
+
+  const BackgroundCard({
+    Key? key,
+    required this.isLeft,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      height: 70,
+      alignment: isLeft ? Alignment.centerLeft : Alignment.centerRight,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: SuperheroesColors.red,
+      ),
+      child: Text(
+        "Remove\nfrom\nfavorites".toUpperCase(),
+        textAlign: isLeft ? TextAlign.left : TextAlign.right,
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
         ),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: card,
-      );
-    }
+      ),
+    );
   }
 }
 

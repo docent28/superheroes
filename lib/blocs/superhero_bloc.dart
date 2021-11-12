@@ -97,6 +97,11 @@ class SuperheroBloc {
     );
   }
 
+  void retry(){
+    superheroPageStateSubject.add(SuperheroPageState.loading);
+    requestSuperhero(false);
+  }
+
   Future<Superhero> request() async {
     final token = dotenv.env["SUPERHERO_TOKEN"];
     final response = await (client ??= http.Client())

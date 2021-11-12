@@ -13,6 +13,7 @@ class SuperheroBloc {
   final String id;
 
   final superheroSubject = BehaviorSubject<Superhero>();
+  final superheroPageStateSubject = BehaviorSubject<SuperheroPageState>();
 
   StreamSubscription? getFromFavoritesSubscription;
   StreamSubscription? requestSubscription;
@@ -32,8 +33,11 @@ class SuperheroBloc {
       (superhero) {
         if (superhero != null) {
           superheroSubject.add(superhero);
+          superheroPageStateSubject.add(SuperheroPageState.loaded);
+        } else {
+          superheroPageStateSubject.add(SuperheroPageState.loading);
         }
-        requestSuperhero();
+        requestSuperhero(superhero != null);
       },
       onError: (error, stackTrace) =>
           print("Error happened in removeFromFavorites: $error, $stackTrace"),
@@ -77,13 +81,17 @@ class SuperheroBloc {
   Stream<bool> observeIsFavorite() =>
       FavoriteSuperheroesStorage.getInstance().observeIsFavorite(id);
 
-  void requestSuperhero() {
+  void requestSuperhero(final bool isInFavorites) {
     requestSubscription?.cancel();
     requestSubscription = request().asStream().listen(
       (superhero) {
         superheroSubject.add(superhero);
+        superheroPageStateSubject.add(SuperheroPageState.loaded);
       },
       onError: (error, stackTrace) {
+        if (!isInFavorites) {
+          superheroPageStateSubject.add(SuperheroPageState.error);
+        }
         print("Error happened in requestSuperhero: $error, $stackTrace");
       },
     );
@@ -115,6 +123,9 @@ class SuperheroBloc {
 
   Stream<Superhero> observeSuperhero() => superheroSubject.distinct();
 
+  Stream<SuperheroPageState> observeSuperheroPageState() =>
+      superheroPageStateSubject.distinct();
+
   void dispose() {
     client?.close();
     getFromFavoritesSubscription?.cancel();
@@ -123,5 +134,8 @@ class SuperheroBloc {
     removeFromFavoriteSubscription?.cancel();
 
     superheroSubject.close();
+    superheroPageStateSubject.close();
   }
 }
+
+enum SuperheroPageState { loading, loaded, error }

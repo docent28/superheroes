@@ -97,7 +97,7 @@ class SuperheroBloc {
     );
   }
 
-  void retry(){
+  void retry() {
     superheroPageStateSubject.add(SuperheroPageState.loading);
     requestSuperhero(false);
   }

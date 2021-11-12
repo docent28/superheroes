@@ -12,6 +12,7 @@ import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:superheroes/resources/superheroes_icons.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
+import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
 class SuperheroPage extends StatefulWidget {
@@ -59,6 +60,31 @@ class SuperheroContentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SuperheroBloc>(context, listen: false);
+    return StreamBuilder<SuperheroPageState>(
+      stream: bloc.observeSuperheroPageState(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const SizedBox.shrink();
+        }
+        final state = snapshot.data!;
+        switch (state) {
+          case SuperheroPageState.loading:
+            return SuperheroLoadingWidget();
+          case SuperheroPageState.loaded:
+            return SuperheroLoadedWidget();
+          case SuperheroPageState.error:
+          default:
+            return SuperheroErrorWidget();
+        }
+      },
+    );
+  }
+}
+
+class SuperheroLoadedWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<SuperheroBloc>(context, listen: false);
     return StreamBuilder<Superhero>(
       stream: bloc.observeSuperhero(),
       builder: (context, snapshot) {
@@ -86,6 +112,56 @@ class SuperheroContentPage extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class SuperheroLoadingWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      slivers: [
+        SliverAppBar(backgroundColor: SuperheroesColors.background),
+        SliverToBoxAdapter(
+          child: Container(
+            margin: const EdgeInsets.only(top: 60),
+            alignment: Alignment.topCenter,
+            height: 44,
+            width: 44,
+            child: CircularProgressIndicator(color: SuperheroesColors.blue),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SuperheroErrorWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<SuperheroBloc>(context, listen: false);
+    return CustomScrollView(
+      physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      slivers: [
+        SliverAppBar(backgroundColor: SuperheroesColors.background),
+        SliverToBoxAdapter(
+          child: Container(
+            margin: const EdgeInsets.only(top: 60),
+            alignment: Alignment.topCenter,
+            child: InfoWithButton(
+              title: "Error happened",
+              subtitle: "Please, try again",
+              buttonText: "Retry",
+              assetImage: SuperheroesImages.superman,
+              imageHeight: 106,
+              imageWidth: 126,
+              imageTopPadding: 22,
+              onTap: bloc.retry,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

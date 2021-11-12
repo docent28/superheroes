@@ -103,7 +103,10 @@ class SuperheroBloc {
 
     final decoded = json.decode(response.body);
     if (decoded['response'] == 'success') {
-      return Superhero.fromJson(decoded);
+      final superhero = Superhero.fromJson(decoded);
+      await FavoriteSuperheroesStorage.getInstance()
+          .updateIfInFavorites(superhero);
+      return superhero;
     } else if (decoded['response'] == 'error') {
       throw ApiException("Client error happened");
     }

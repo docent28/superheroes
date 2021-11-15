@@ -49,8 +49,8 @@ class _MainPageState extends State<MainPage> {
 
 class MainPageContent extends StatefulWidget {
   @override
-  // State<MainPageContent> createState() => _MainPageContentState();
-  _MainPageContentState createState() => _MainPageContentState();
+  State<MainPageContent> createState() => _MainPageContentState();
+  // _MainPageContentState createState() => _MainPageContentState();
 }
 
 class _MainPageContentState extends State<MainPageContent> {
@@ -99,8 +99,8 @@ class SearchWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  // State<SearchWidget> createState() => _SearchWidgetState();
-  _SearchWidgetState createState() => _SearchWidgetState();
+  State<SearchWidget> createState() => _SearchWidgetState();
+  // _SearchWidgetState createState() => _SearchWidgetState();
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
